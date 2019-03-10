@@ -11,6 +11,12 @@ client.on('message', msg => {
     if (msg.content == 'ping') {
         msg.reply('Pong!');
     }
+    else if(msg.content == 'you\'re mum gay') {
+        msg.reply('no u');
+    }
+    else if(msg.content == 'what is my avatar') {
+        msg.reply(msg.author.avatarURL);
+    }
 });
 
-client.login(Token);
+client.login(Token.Token);
