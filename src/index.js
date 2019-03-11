@@ -1,11 +1,16 @@
-const Discord = require('discord.js')
+// --------------------------- Module requirements ----------------------------------------------------------------------
+
+const Discord = require('discord.js');
 const client = new Discord.Client();
 const fs = require('fs');
 const Token = require('./config.json');
 
+// ---------------------------- On ready event ---------------------------------------------------------------------------
 client.on('ready', () => {
     console.log(`logged in as ${client.user.tag}!`);
 });
+
+// ---------------------------- On message event memes -------------------------------------------------------------------
 
 client.on('message', async msg => {
 
@@ -37,7 +42,7 @@ client.on('message', async msg => {
         msg.channel.send("dan has retard");
     }
 
-    //--------------------------------------------------------------------------------------------
+    //------------------------------- Moderation commands -------------------------------------------------------------
 
     if (msg.content.startsWith('!kick')) {
         const user = msg.mentions.users.first();
@@ -47,6 +52,18 @@ client.on('message', async msg => {
         if (member) {
             member.kick('Reason').then(() => {
                 msg.reply('Successfully kicked ${user.tag}');
+            });
+        }
+    }
+
+    if (msg.content.startsWith('!ban')) {
+        const user = msg.mentions.users.first();
+        if (user) {
+            const member = msg.guild.member(user);
+        }
+        if (member) {
+            member.ban("Reason").then(() => {
+                msg.reply("successfully banned ${user.tag}");
             });
         }
     }
