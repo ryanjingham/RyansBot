@@ -69,6 +69,7 @@ client.on('message', async msg => {
     }
 });
 
+// --------------------------------------- Member adds / leaves --------------------------------------------------------
 
 client.on('guildMemberAdd', member => {
     const channel = member.guild.channels.find(ch => ch.name == 'welcome');
