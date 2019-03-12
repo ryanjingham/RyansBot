@@ -61,46 +61,46 @@ client.on('message', async msg => {
 
     //------------------------------- Moderation commands -------------------------------------------------------------
 
-    if (msg.content.startsWith('!')) {
+    // if (msg.content.startsWith('!')) {
 
-        // if (msg.content.search('kick') == true) {
-        //     var member = 'yeet'
-        //     let higherPowers = msg.guild.roles.find(role => role.name == "Higher Powers");
-        //     let lowerPowers = msg.guild.roles.find(role => role.name == "Lower Powers");
-        //     let roleTest = msg.guild.roles.find(role => role.name = "BotTestRole")
-        //     if (msg.member.roles.some(r => [roleTest.id])) {
-        //         const user = msg.mentions.users.first();
-        //         if (user) {
-        //             member = msg.guild.member(user);
-        //         }
+    //     if (msg.content.search('kick') == true) {
+    //         var member = 'yeet'
+    //         let higherPowers = msg.guild.roles.find(role => role.name == "Higher Powers");
+    //         let lowerPowers = msg.guild.roles.find(role => role.name == "Lower Powers");
+    //         let roleTest = msg.guild.roles.find(role => role.name = "BotTestRole")
+    //         if (msg.member.roles.some(r => [roleTest.id])) {
+    //             const user = msg.mentions.users.first();
+    //             if (user) {
+    //                 member = msg.guild.member(user);
+    //             }
 
-        //         if (member) {
-        //             member.kick('Reason').then(() => {
-        //             msg.reply(`Successfully boinked ${user.tag}`);
-        //             });
-        //         }
-        //     }
-        //     else {
-        //         msg.reply("You do not have sufficient permissions to kick people. Retard.")
-        //     }
+    //             if (member) {
+    //                 member.kick('Reason').then(() => {
+    //                 msg.reply(`Successfully boinked ${user.tag}`);
+    //                 });
+    //             }
+    //         }
+    //         else {
+    //             msg.reply("You do not have sufficient permissions to kick people. Retard.")
+    //         }
             
-        // }
+    //     }
     
-        // if (msg.content.search('ban') == true) {
-        //     let higherPowers = msg.guild.roles.find(role => role.name == 'Higher Powers');
-        //     if (msg.member.roles.has(higherPowers.id)) {
-        //         const user = msg.mentions.users.first();
-        //         if (user) {
-        //             const member = msg.guild.member(user);
-        //         }
-        //         if (member) {
-        //             member.ban("Reason").then(() => {
-        //                 msg.reply("successfully banned ${user.tag}");
-        //             });
-        //         }
-        //     }
+    //     if (msg.content.search('ban') == true) {
+    //         let higherPowers = msg.guild.roles.find(role => role.name == 'Higher Powers');
+    //         if (msg.member.roles.has(higherPowers.id)) {
+    //             const user = msg.mentions.users.first();
+    //             if (user) {
+    //                 const member = msg.guild.member(user);
+    //             }
+    //             if (member) {
+    //                 member.ban("Reason").then(() => {
+    //                     msg.reply("successfully banned ${user.tag}");
+    //                 });
+    //             }
+    //         }
             
-        // }
+    //     }
     }
     
 });
