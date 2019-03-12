@@ -3,7 +3,7 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const fs = require('fs');
-const Token = require('./config.json');
+const Token = require('./../config.json');
 
 // ---------------------------- On ready event ---------------------------------------------------------------------------
 client.on('ready', () => {
@@ -13,7 +13,6 @@ client.on('ready', () => {
 // ---------------------------- On message event memes -------------------------------------------------------------------
 
 client.on('message', async msg => {
-
     if (msg.author.bot) return;
 
     if (msg.content == 'ping') {
@@ -38,13 +37,26 @@ client.on('message', async msg => {
         msg.channel.send("MRS OBAMA GET DOWN");
     }
 
-    if (msg.author.tag == 'AWildEwok') {
-        msg.channel.send("dan has retard");
-    }
+//if (msg.author.username == 'AWildEwok') {
+        //msg.channel.send("dan has retard");
+    //}
+
+    if (msg.content == 'spam me daddy') {
+        var x = 0
+        do {
+            x++;
+            msg.channel.send("REEEEEEEEEE");
+        }
+        while (x < 5);
+
+        }
 
     //------------------------------- Moderation commands -------------------------------------------------------------
 
-    if (msg.content.startsWith('!kick')) {
+    if (msg.content.startsWith('!')) {
+
+    }
+    if (msg.content.search('kick') == true) {
         const user = msg.mentions.users.first();
         if (user) {
             const member = msg.guild.member(user);
@@ -56,7 +68,7 @@ client.on('message', async msg => {
         }
     }
 
-    if (msg.content.startsWith('!ban')) {
+    if (msg.content.search('ban') == true) {
         const user = msg.mentions.users.first();
         if (user) {
             const member = msg.guild.member(user);
