@@ -5,6 +5,8 @@ const client = new Discord.Client();
 const fs = require('fs');
 const config = require('./../config.json');
 
+var prefix = config.Prefix
+
 // ---------------------------- On ready event ---------------------------------------------------------------------------
 client.on('ready', () => {
     console.log(`logged in as ${client.user.tag}!`);
@@ -13,7 +15,6 @@ client.on('ready', () => {
 // ---------------------------- On message event memes -------------------------------------------------------------------
 
 client.on('message', async msg => {
-    let prefix = config.Prefix;
     let messageArray = msg.content.split(" ")
     let args = messageArray.slice(1);
     if (msg.author.bot) return;
@@ -122,7 +123,22 @@ client.on('message', async msg => {
                 console.log(`${msg.guild.name}: user ${user.name} was banned.`);
         }
     }
+
+// ---------------------------------------- Settings commands ----------------------------------------------------------
     
+    if (messageArray[0] ==`${prefix}settings`) {
+        if (messageArray[1].toLowerCase() == "help") {
+            let settingsEmbed = new Discord.RichEmbed()
+                .setTitle("~settings~")
+                .setColor('#00FF00')
+                .setThumbnail("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRgJPDoS0TMZDLxOcZ7IuvODsMUkaIC1Ih0t_ar5a1DWMAm2HtbxA")
+                .addField("1: Prefix", "Change the default prefix of the bot. Default is '?'")
+                .addField("More settings coming soon", "fuck u");
+
+                msg.channel.send(settingsEmbed);
+        }
+    }
+
 });
 
 // --------------------------------------- Member adds / leaves --------------------------------------------------------
@@ -141,6 +157,17 @@ client.on('guildMemberRemove', async member => {
     channel.send(`${member} just left, the dirty fucker`);
 
     console.log(`${member.guild.name}: user ${member.displayName} left the server.\n`)
+});
+
+// --------------------------------------- Initial setup when joining a server ------------------------------------------
+
+client.on('guildCreate', guild => {
+    const welcomeChannel = guild.channels.find(ch=> ch.name == "welcome");
+    if (!welcomeChannel) return;
+
+    welcomeChannel.send("Good day. I am Autismobot. Please refer to me in my proper pronouns. Everyone is a big homo.");
+    
+
 });
 
 client.login(config.Token);
