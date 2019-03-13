@@ -1,4 +1,4 @@
-# MuskBot
+# Ryans Bot
 
 My first attempt at using discord.js to create a functional discord bot. This bot has no real goal or anything (relatable), it's just a way for me to create a bot that may or may not be useful for me in small servers.
 
