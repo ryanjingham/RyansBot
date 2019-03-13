@@ -3,7 +3,7 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const fs = require('fs');
-const Token = require('./../config.json');
+const config = require('./../config.json');
 
 // ---------------------------- On ready event ---------------------------------------------------------------------------
 client.on('ready', () => {
@@ -13,6 +13,9 @@ client.on('ready', () => {
 // ---------------------------- On message event memes -------------------------------------------------------------------
 
 client.on('message', async msg => {
+    let prefix = config.Prefix;
+    let messageArray = msg.content.split(" ")
+    let args = messageArray.slice(1);
     if (msg.author.bot) return;
 
     if (msg.content == 'ping') {
@@ -61,46 +64,44 @@ client.on('message', async msg => {
 
     //------------------------------- Moderation commands -------------------------------------------------------------
 
-    // if (msg.content.startsWith('!')) {
+    if (msg.content.startsWith(prefix)) {
 
-    //     if (msg.content.search('kick') == true) {
-    //         var member = 'yeet'
-    //         let higherPowers = msg.guild.roles.find(role => role.name == "Higher Powers");
-    //         let lowerPowers = msg.guild.roles.find(role => role.name == "Lower Powers");
-    //         let roleTest = msg.guild.roles.find(role => role.name = "BotTestRole")
-    //         if (msg.member.roles.some(r => [roleTest.id])) {
-    //             const user = msg.mentions.users.first();
-    //             if (user) {
-    //                 member = msg.guild.member(user);
-    //             }
+        if (messageArray[0] == `${prefix}kick`) {
+            let user = msg.mentions.users.first();
+            if (!user) {
+                msg.channel.send("Error 404: User not Found");
+            }
+            let kickReason = args.join(" ").slice(22);
+            if(!msg.member.hasPermission("MANAGE_MESSAGES")) return msg.channel.send("No permissions, retard");
+            if(user.hasPermission("MANAGE_MESSAGES")) return msg.channel.send("That person can't be kicked, retard");
 
-    //             if (member) {
-    //                 member.kick('Reason').then(() => {
-    //                 msg.reply(`Successfully boinked ${user.tag}`);
-    //                 });
-    //             }
-    //         }
-    //         else {
-    //             msg.reply("You do not have sufficient permissions to kick people. Retard.")
-    //         }
+            let kickEmbed = new Discord.RichEmbed()
+                .setDescription("~Kick~")
+                .setColor("#e56b00")
+                .addField("Kicked User", `${user} with ID ${user.id}`)
+                .addField("Kicked by" , `<@${msg.author.id}> with ID ${message.author.id}`)
+                .addField("Kicked in", `${msg.channel}`)
+                .addField("Time", `${msg.createdAt}`)
+                .addField("Reason", `${kickReason}`);
             
-    //     }
-    
-    //     if (msg.content.search('ban') == true) {
-    //         let higherPowers = msg.guild.roles.find(role => role.name == 'Higher Powers');
-    //         if (msg.member.roles.has(higherPowers.id)) {
-    //             const user = msg.mentions.users.first();
-    //             if (user) {
-    //                 const member = msg.guild.member(user);
-    //             }
-    //             if (member) {
-    //                 member.ban("Reason").then(() => {
-    //                     msg.reply("successfully banned ${user.tag}");
-    //                 });
-    //             }
-    //         }
+            let kickChannel = msg.guild.channels.find(`name`, "logs");
+            if (!kickChannel) return msg.channel.send("Can't find incidents channel.");
+
+            msg.guild.member(user).kick(kickReason);
+            kickChannel.send(kickEmbed);
+            msg.channel.send(kickEmbed);
             
-    //     }
+        }
+
+        if (messageArray[0] == `${prefix}ban`) {
+            let user = msg.mentions.user.first();
+            if (!user) msg.channel.send("Error 404: User not found");
+            
+            let banReason = args.join(" ").slice(22);
+            if(!msg.member.hasPermission("ADMINISTRATOR")) return msg.channel.send("No permissions, retard");
+            if(user.hasPermission("ADMINISTRATOR")) return msg.channel.send("That person can't be kicked, retard");
+            
+        }
     }
     
 });
@@ -111,12 +112,16 @@ client.on('guildMemberAdd', member => {
     const channel = member.guild.channels.find(ch => ch.name == 'welcome');
     if (!channel) return;
     channel.send(`Eat shit and die, ${member}`);
+
+    console.log(`${member.guild.name}: user ${member.displayName} joined the server.\n`)
 });
 
 client.on('guildMemberRemove', async member => {
     const channel = member.guild.channels.find(ch => ch.name == 'welcome');
     if (!channel) return;
     channel.send(`${member} just left, the dirty fucker`);
+
+    console.log(`${member.guild.name}: user ${member.displayName} left the server.\n`)
 });
 
-client.login(Token.Token);
+client.login(config.Token);
