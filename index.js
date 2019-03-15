@@ -3,9 +3,28 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const fs = require('fs');
-const config = require('./../config.json');
+const config = require('./config.json');
+const bot = new Discord.Client({disableEveryone: true});
+bot.commands = new Discord.Collection();
 
 var prefix = config.Prefix
+
+fs.readdir("./commands", (err, files) => {
+    if(err) console.log(err);
+
+    let jsfile = files.filter(f => f.split(".").pop() == "js");
+    if(jsfile.length <= 0) {
+        console.log("Couldn't find commands.");
+        return;
+    }
+
+    jsfile.forEach((f, i) => {
+        let props = require(`./commands/${f}`);
+        console.log(`${f} loaded`);
+        bot.commands.set(props.help.name, props);
+        console.log(props);
+    });
+});
 
 // ---------------------------- On ready event ---------------------------------------------------------------------------
 client.on('ready', () => {
@@ -16,8 +35,12 @@ client.on('ready', () => {
 
 client.on('message', async msg => {
     let messageArray = msg.content.split(" ")
+    let cmd = messageArray[0]
     let args = messageArray.slice(1);
     if (msg.author.bot) return;
+
+    let commandFile = bot.commands.get(cmd.slice(prefix.length));
+    if(commandFile) commandFile.run(bot, msg. args);
 
     if (msg.content == 'ping') {
         msg.reply('Pong!');
@@ -65,68 +88,46 @@ client.on('message', async msg => {
 
     //------------------------------- Moderation commands -------------------------------------------------------------
 
-    if (msg.content.startsWith(prefix)) {
 
-        if (messageArray[0] == `${prefix}kick`) {
-            let user = msg.mentions.users.first();
-            if (!user) {
-                msg.channel.send("Error 404: User not Found");
-            }
-            let kickReason = args.join(" ").slice(22);
-            if(!msg.member.hasPermission("MANAGE_MESSAGES")) return msg.channel.send("No permissions, retard");
-            if(user.hasPermission("MANAGE_MESSAGES")) return msg.channel.send("That person can't be kicked, retard");
+    // if (messageArray[0] == `${prefix}kick`) {
+        
+        
+    // }
 
-            let kickEmbed = new Discord.RichEmbed()
-                .setDescription("~Kick~")
-                .setColor("#e56b00")
-                .addField("Kicked User", `${user} with ID ${user.id}`)
-                .addField("Kicked by" , `<@${msg.author.id}> with ID ${message.author.id}`)
-                .addField("Kicked in", `${msg.channel}`)
-                .addField("Time", `${msg.createdAt}`)
-                .addField("Reason", `${kickReason}`);
-            
-            let kickChannel = msg.guild.channels.find(`name`, "logs");
-            if (!kickChannel) return msg.channel.send("Can't find logs channel.");
+    if (cmd == `${prefix}ban`) {
+        let user = msg.mentions.user.first();
+        if (!user) msg.channel.send("Error 404: User not found");
+        
+        let banReason = args.join(" ").slice(22);
+        if(!msg.member.hasPermission("ADMINISTRATOR")) return msg.channel.send("No permissions, retard");
+        if(user.hasPermission("ADMINISTRATOR")) return msg.channel.send("That person can't be kicked, retard");
 
-            msg.guild.member(user).kick(kickReason);
-            kickChannel.send(kickEmbed);
-            msg.channel.send(kickEmbed);
+        let banEmbed = new Discord.RichEmbed()
+            .setDescription("~Ban~")
+            .setColor('#e56b00')
+            .addField("Banned User", `${user} with ID ${user.id}`)
+            .addField("Banned by" , `<@${msg.author.id}> with ID ${message.author.id}`)
+            .addField("Banned in", `${msg.channel}`)
+            .addField("Time", `${msg.createdAt}`)
+            .addField("Reason", `${banReason}`);
+        
+        let logs = msg.guild.channels.find('name', "logs");
+        if (!banChannel) return msg.channel.send("Can't find logs channel");
 
-            console.log(`${msg.guild.name}: user ${user.name} was kicked.`);
-            
-        }
+        msg.guild.member(user).ban(banReason);
+        logs.send(banEmbed);
+        msg.channel.send(banEmbed);
 
-        if (messageArray[0] == `${prefix}ban`) {
-            let user = msg.mentions.user.first();
-            if (!user) msg.channel.send("Error 404: User not found");
-            
-            let banReason = args.join(" ").slice(22);
-            if(!msg.member.hasPermission("ADMINISTRATOR")) return msg.channel.send("No permissions, retard");
-            if(user.hasPermission("ADMINISTRATOR")) return msg.channel.send("That person can't be kicked, retard");
+        console.log(`${msg.guild.name}: user ${user.name} was banned.`);
+    }
 
-            let banEmbed = new Discord.RichEmbed()
-                .setDescription("~Ban~")
-                .setColor('#e56b00')
-                .addField("Banned User", `${user} with ID ${user.id}`)
-                .addField("Banned by" , `<@${msg.author.id}> with ID ${message.author.id}`)
-                .addField("Banned in", `${msg.channel}`)
-                .addField("Time", `${msg.createdAt}`)
-                .addField("Reason", `${banReason}`);
-            
-                let logs = msg.guild.channels.find('name', "logs");
-                if (!banChannel) return msg.channel.send("Can't find logs channel");
-
-                msg.guild.member(user).ban(banReason);
-                logs.send(banEmbed);
-                msg.channel.send(banEmbed);
-
-                console.log(`${msg.guild.name}: user ${user.name} was banned.`);
-        }
+    if (cmd == `${prefix}command_handler_test`) {
+        msg.channel.send("Command handler works");
     }
 
 // ---------------------------------------- Settings commands ----------------------------------------------------------
-    
-    if (messageArray[0] ==`${prefix}settings`) {
+
+    if (cmd ==`${prefix}settings`) {
         if (messageArray[1].toLowerCase() == "help") {
             let settingsEmbed = new Discord.RichEmbed()
                 .setTitle("~settings~")
@@ -135,11 +136,11 @@ client.on('message', async msg => {
                 .addField("1: Prefix", "Change the default prefix of the bot. Default is '?'")
                 .addField("More settings coming soon", "fuck u");
 
-                msg.channel.send(settingsEmbed);
-        }
+            msg.channel.send(settingsEmbed);
+        }   
     }
-
 });
+
 
 // --------------------------------------- Member adds / leaves --------------------------------------------------------
 
