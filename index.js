@@ -10,22 +10,22 @@ var prefix = config.Prefix
 
 console.log("------------------------------");
 
-// fs.readdir("./commands/", (err, files) => {
-//     if(err) console.log(err);
+fs.readdir("./commands/", (err, files) => {
+    if(err) console.log(err);
 
-//     let jsfile = files.filter(f => f.split(".").pop() == "js");
-//     if(jsfile.length <= 0) {
-//         console.log("Couldn't find commands.");
-//         return;
-//     }
-//     console.log("-------------------------------------");
-//     jsfile.forEach((f, i) => {
-//         let props = require(`./commands/${f}`);
-//         console.log(`${f} loaded`);
-//         bot.commands.set(props.help.name, props);
-//     });
-//     console.log("-------------------------------------");
-// });
+    let jsfile = files.filter(f => f.split(".").pop() == "js");
+    if(jsfile.length <= 0) {
+        console.log("Couldn't find commands.");
+        return;
+    }
+    console.log("-------------------------------------");
+    jsfile.forEach((f, i) => {
+        let props = require(`./commands/${f}`);
+        console.log(`${f} loaded`);
+        bot.commands.set(props.help.name, props);
+    });
+    console.log("-------------------------------------");
+});
 
 // ---------------------------- On ready event ---------------------------------------------------------------------------
 bot.on('ready', () => {
@@ -40,8 +40,8 @@ bot.on('message', async msg => {
     let args = messageArray.slice(1);
     if (msg.author.bot) return;
 
-    // let commandFile = bot.commands.get(cmd.slice(prefix.length));
-    // if(commandFile) commandFile.run(bot, msg, args);
+    let commandFile = bot.commands.get(cmd.slice(prefix.length));
+    if(commandFile) commandFile.run(bot, msg, args);
 
     if (msg.content == 'ping') {
         msg.reply('Pong!');
@@ -88,35 +88,35 @@ bot.on('message', async msg => {
     }
 // ---------------------------------------- Moderation commands --------------------------------------------------------
 
-    if (cmd == `${prefix}kick`) {
-        let user = msg.guild.member(msg.mentions.users.first() || msg.guild.members.get(args[0]));
-        if (!user) {
-            msg.channel.send("Error 404: User not Found");
-        }
-        let kickReason = args.join(" ").slice(22);
-        if(!msg.member.hasPermission("MANAGE_MESSAGES")) return msg.channel.send("No permissions, retard");
-        if(user.hasPermission("MANAGE_MESSAGES")) return msg.channel.send("That person can't be kicked, retard");
+    // if (cmd == `${prefix}kick`) {
+    //     let user = msg.guild.member(msg.mentions.users.first() || msg.guild.members.get(args[0]));
+    //     if (!user) {
+    //         msg.channel.send("Error 404: User not Found");
+    //     }
+    //     let kickReason = args.join(" ").slice(22);
+    //     if(!msg.member.hasPermission("MANAGE_MESSAGES")) return msg.channel.send("No permissions, retard");
+    //     if(user.hasPermission("MANAGE_MESSAGES")) return msg.channel.send("That person can't be kicked, retard");
 
-        let kickEmbed = new Discord.RichEmbed()
-            .setDescription("~Kick~")
-            .setColor("#e56b00")
-            .addField("Kicked User", `${user} with ID ${user.id}`)
-            .addField("Kicked by" , `<@${msg.author.id}> with ID ${msg.author.id}`)
-            .addField("Kicked in", `${msg.channel}`)
-            .addField("Time", `${msg.createdAt}`)
-            .addField("Reason", `${kickReason}`);
+    //     let kickEmbed = new Discord.RichEmbed()
+    //         .setDescription("~Kick~")
+    //         .setColor("#e56b00")
+    //         .addField("Kicked User", `${user} with ID ${user.id}`)
+    //         .addField("Kicked by" , `<@${msg.author.id}> with ID ${msg.author.id}`)
+    //         .addField("Kicked in", `${msg.channel}`)
+    //         .addField("Time", `${msg.createdAt}`)
+    //         .addField("Reason", `${kickReason}`);
         
-        let kickChannel = msg.guild.channels.find(`name`, "logs");
-        if (!kickChannel) return msg.channel.send("Can't find logs channel.");
+    //     let kickChannel = msg.guild.channels.find(`name`, "logs");
+    //     if (!kickChannel) return msg.channel.send("Can't find logs channel.");
 
-        msg.guild.member(user).kick(kickReason);
-        kickChannel.send(kickEmbed);
-        msg.channel.send(kickEmbed);
+    //     msg.guild.member(user).kick(kickReason);
+    //     kickChannel.send(kickEmbed);
+    //     msg.channel.send(kickEmbed);
 
-        console.log(`${msg.guild.name}: user ${user.name} was kicked.`);
-    }
+    //     console.log(`${msg.guild.name}: user ${user.name} was kicked.`);
+    // }
 
-    if (cmd == `${prefix}ban`)
+    // if (cmd == `${prefix}ban`)
 
 
 // ---------------------------------------- Settings commands ----------------------------------------------------------
