@@ -1,45 +1,47 @@
 // --------------------------- Module requirements ----------------------------------------------------------------------
 
 const Discord = require('discord.js');
-const client = new Discord.Client();
+const bot = new Discord.Client({disableEveryone: true});
 const fs = require('fs');
 const config = require('./config.json');
-client.commands = new Discord.Collection();
+bot.commands = new Discord.Collection();
 
 var prefix = config.Prefix
 
-fs.readdir("./commands/", (err, files) => {
-    if(err) console.log(err);
+console.log("------------------------------");
 
-    let jsfile = files.filter(f => f.split(".").pop() == "js");
-    if(jsfile.length <= 0) {
-        console.log("Couldn't find commands.");
-        return;
-    }
-    console.log("-------------------------------------");
-    jsfile.forEach((f, i) => {
-        let props = require(`./commands/${f}`);
-        console.log(`${f} loaded`);
-        client.commands.set(props.help.name, props);
-    });
-    console.log("-------------------------------------");
-});
+// fs.readdir("./commands/", (err, files) => {
+//     if(err) console.log(err);
+
+//     let jsfile = files.filter(f => f.split(".").pop() == "js");
+//     if(jsfile.length <= 0) {
+//         console.log("Couldn't find commands.");
+//         return;
+//     }
+//     console.log("-------------------------------------");
+//     jsfile.forEach((f, i) => {
+//         let props = require(`./commands/${f}`);
+//         console.log(`${f} loaded`);
+//         bot.commands.set(props.help.name, props);
+//     });
+//     console.log("-------------------------------------");
+// });
 
 // ---------------------------- On ready event ---------------------------------------------------------------------------
-client.on('ready', () => {
-    console.log(`logged in as ${client.user.tag}!`);
+bot.on('ready', () => {
+    console.log(`logged in as ${bot.user.tag}!`);
 });
 
 // ---------------------------- On message event memes -------------------------------------------------------------------
 
-client.on('message', async msg => {
+bot.on('message', async msg => {
     let messageArray = msg.content.split(" ")
-    let cmd = messageArray[0]
+    let cmd = messageArray[0].toLowerCase();
     let args = messageArray.slice(1);
     if (msg.author.bot) return;
 
-    let commandFile = client.commands.get(cmd.slice(prefix.length));
-    if(commandFile) commandFile.run(client, msg, args);
+    // let commandFile = bot.commands.get(cmd.slice(prefix.length));
+    // if(commandFile) commandFile.run(bot, msg, args);
 
     if (msg.content == 'ping') {
         msg.reply('Pong!');
@@ -84,45 +86,38 @@ client.on('message', async msg => {
         let Role = msg.guild.roles.find(role => role.name == "Higher Powers");
         msg.reply(msg.member.roles.has(Role.id))
     }
+// ---------------------------------------- Moderation commands --------------------------------------------------------
 
-    //------------------------------- Moderation commands -------------------------------------------------------------
+    if (cmd == `${prefix}kick`) {
+        let user = msg.guild.member(msg.mentions.users.first() || msg.guild.members.get(args[0]));
+        if (!user) {
+            msg.channel.send("Error 404: User not Found");
+        }
+        let kickReason = args.join(" ").slice(22);
+        if(!msg.member.hasPermission("MANAGE_MESSAGES")) return msg.channel.send("No permissions, retard");
+        if(user.hasPermission("MANAGE_MESSAGES")) return msg.channel.send("That person can't be kicked, retard");
 
-
-    // if (messageArray[0] == `${prefix}kick`) {
-        
-        
-    // }
-
-    if (cmd == `${prefix}ban`) {
-        let user = msg.mentions.user.first();
-        if (!user) msg.channel.send("Error 404: User not found");
-        
-        let banReason = args.join(" ").slice(22);
-        if(!msg.member.hasPermission("ADMINISTRATOR")) return msg.channel.send("No permissions, retard");
-        if(user.hasPermission("ADMINISTRATOR")) return msg.channel.send("That person can't be kicked, retard");
-
-        let banEmbed = new Discord.RichEmbed()
-            .setDescription("~Ban~")
-            .setColor('#e56b00')
-            .addField("Banned User", `${user} with ID ${user.id}`)
-            .addField("Banned by" , `<@${msg.author.id}> with ID ${message.author.id}`)
-            .addField("Banned in", `${msg.channel}`)
+        let kickEmbed = new Discord.RichEmbed()
+            .setDescription("~Kick~")
+            .setColor("#e56b00")
+            .addField("Kicked User", `${user} with ID ${user.id}`)
+            .addField("Kicked by" , `<@${msg.author.id}> with ID ${msg.author.id}`)
+            .addField("Kicked in", `${msg.channel}`)
             .addField("Time", `${msg.createdAt}`)
-            .addField("Reason", `${banReason}`);
+            .addField("Reason", `${kickReason}`);
         
-        let logs = msg.guild.channels.find('name', "logs");
-        if (!banChannel) return msg.channel.send("Can't find logs channel");
+        let kickChannel = msg.guild.channels.find(`name`, "logs");
+        if (!kickChannel) return msg.channel.send("Can't find logs channel.");
 
-        msg.guild.member(user).ban(banReason);
-        logs.send(banEmbed);
-        msg.channel.send(banEmbed);
+        msg.guild.member(user).kick(kickReason);
+        kickChannel.send(kickEmbed);
+        msg.channel.send(kickEmbed);
 
-        console.log(`${msg.guild.name}: user ${user.name} was banned.`);
+        console.log(`${msg.guild.name}: user ${user.name} was kicked.`);
     }
 
-    if (cmd == `${prefix}command_handler_test`) {
-        msg.channel.send("Command handler works");
-    }
+    if (cmd == `${prefix}ban`)
+
 
 // ---------------------------------------- Settings commands ----------------------------------------------------------
 
@@ -143,7 +138,7 @@ client.on('message', async msg => {
 
 // --------------------------------------- Member adds / leaves --------------------------------------------------------
 
-client.on('guildMemberAdd', member => {
+bot.on('guildMemberAdd', member => {
     const channel = member.guild.channels.find(ch => ch.name == 'welcome');
     if (!channel) return;
     channel.send(`Eat shit and die, ${member}`);
@@ -151,7 +146,7 @@ client.on('guildMemberAdd', member => {
     console.log(`${member.guild.name}: user ${member.displayName} joined the server.\n`)
 });
 
-client.on('guildMemberRemove', async member => {
+bot.on('guildMemberRemove', async member => {
     const channel = member.guild.channels.find(ch => ch.name == 'welcome');
     if (!channel) return;
     channel.send(`${member} just left, the dirty fucker`);
@@ -161,7 +156,7 @@ client.on('guildMemberRemove', async member => {
 
 // --------------------------------------- Initial setup when joining a server ------------------------------------------
 
-client.on('guildCreate', guild => {
+bot.on('guildCreate', guild => {
     const welcomeChannel = guild.channels.find(ch=> ch.name == "welcome");
     if (!welcomeChannel) return;
 
@@ -170,4 +165,4 @@ client.on('guildCreate', guild => {
 
 });
 
-client.login(config.Token);
+bot.login(config.Token);
