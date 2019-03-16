@@ -4,12 +4,11 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 const fs = require('fs');
 const config = require('./config.json');
-const bot = new Discord.Client({disableEveryone: true});
-bot.commands = new Discord.Collection();
+client.commands = new Discord.Collection();
 
 var prefix = config.Prefix
 
-fs.readdir("./commands", (err, files) => {
+fs.readdir("./commands/", (err, files) => {
     if(err) console.log(err);
 
     let jsfile = files.filter(f => f.split(".").pop() == "js");
@@ -17,12 +16,13 @@ fs.readdir("./commands", (err, files) => {
         console.log("Couldn't find commands.");
         return;
     }
-
+    console.log("-------------------------------------");
     jsfile.forEach((f, i) => {
         let props = require(`./commands/${f}`);
         console.log(`${f} loaded`);
-        bot.commands.set(props.help.name, props);
+        client.commands.set(props.help.name, props);
     });
+    console.log("-------------------------------------");
 });
 
 // ---------------------------- On ready event ---------------------------------------------------------------------------
@@ -38,8 +38,8 @@ client.on('message', async msg => {
     let args = messageArray.slice(1);
     if (msg.author.bot) return;
 
-    let commandFile = bot.commands.get(cmd.slice(prefix.length));
-    if(commandFile) commandFile.run(bot, msg. args);
+    let commandFile = client.commands.get(cmd.slice(prefix.length));
+    if(commandFile) commandFile.run(client, msg, args);
 
     if (msg.content == 'ping') {
         msg.reply('Pong!');

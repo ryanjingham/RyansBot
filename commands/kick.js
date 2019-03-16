@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 
-module.exports.run = async (bot, message, args) => {
+module.exports.run = async (client, msg, args) => {
     // let user = msg.mentions.users.first();
     //         if (!user) {
     //             msg.channel.send("Error 404: User not Found");
@@ -27,6 +27,7 @@ module.exports.run = async (bot, message, args) => {
 
     //         console.log(`${msg.guild.name}: user ${user.name} was kicked.`);
     console.log("works");
+    msg.channel.send("works");
 }
 
 module.exports.help = {
