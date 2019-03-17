@@ -8,7 +8,7 @@ module.exports.run = async (bot, msg, args) => {
     if(!msg.member.hasPermission("ADMINISTRATOR")) return msg.channel.send("No permissions, retard");
     if(user.hasPermission("ADMINISTRATOR")) return msg.channel.send("That person can't be kicked, retard");
 
-    msg.guild.member(user).ban(banReason);
+    user.ban(banReason);
 
     console.log(`${msg.guild.name}: user ${user.name} was banned.`);
 }
