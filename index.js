@@ -49,7 +49,7 @@ bot.on('message', async msg => {
     if(msg.content == 'you\'re mum gay') {
         msg.reply('no u');
     }
-    if(msg.content == 'what is my avatar') {
+    if(msg.content == 'enhance avatar') {
         msg.reply(msg.author.avatarURL);
     }
 
@@ -129,8 +129,6 @@ bot.on('guildCreate', guild => {
     if (!welcomeChannel) return;
 
     welcomeChannel.send("Good day. I am Autismobot. Please refer to me in my proper pronouns. Everyone is a big homo.");
-    
-
 });
 
 bot.login(config.Token);
