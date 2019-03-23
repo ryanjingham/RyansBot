@@ -5,7 +5,6 @@ const bot = new Discord.Client({disableEveryone: true});
 const fs = require('fs');
 const config = require('./config.json');
 bot.commands = new Discord.Collection();
-const imgurwrap = require('imgurwrap.js');
 
 var prefix = config.Prefix
 
