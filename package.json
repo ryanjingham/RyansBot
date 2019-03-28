@@ -1,0 +1,26 @@
+{
+  "name": "autismobot",
+  "version": "1.0.0",
+  "description": "My first attempt at using discord.js to create a functional discord bot. This bot has no real goal or anything (relatable), it's just a way for me to create a bot that may or may not be useful for me in small servers.",
+  "main": "index.js",
+  "dependencies": {
+    "discord.js": "^11.4.2",
+    "fs": "^0.0.1-security",
+    "imgurwrap": "^0.0.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RyanIngham2001/MuskBot.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RyanIngham2001/MuskBot/issues"
+  },
+  "homepage": "https://github.com/RyanIngham2001/MuskBot#readme"
+}
