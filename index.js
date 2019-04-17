@@ -32,6 +32,7 @@ bot.on('ready', () => {
     console.log(`logged in as ${bot.user.tag}!`);
 });
 
+
 // ---------------------------- On message event memes -------------------------------------------------------------------
 
 bot.on('message', async msg => {
@@ -43,7 +44,14 @@ bot.on('message', async msg => {
     let commandFile = bot.commands.get(cmd.slice(prefix.length));
     if(commandFile) commandFile.run(bot, msg, args);
 
-   
+    if (msg.author.id === '238203655449346058') {
+        msg.channel.send("nigger");
+    }
+
+    if (msg.author.id === '252135691071389712') {
+        msg.channel.send('snitch');
+    }
+
 });
 
 // --------------------------------------- Member adds / leaves --------------------------------------------------------
@@ -59,7 +67,7 @@ bot.on('guildMemberAdd', member => {
 bot.on('guildMemberRemove', async member => {
     const channel = member.guild.channels.find(ch => ch.name == 'welcome');
     if (!channel) return;
-    channel.send(`${member} just left, the dirty fucker`);
+    channel.senkd(`${member} just left, the dirty fucker`);
 
     console.log(`${member.guild.name}: user ${member.displayName} left the server.\n`)
 });
