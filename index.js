@@ -53,6 +53,58 @@ bot.on('message', async msg => {
         msg.channel.send('snitch');
     }
 
+    if (msg.author.id === '210956571608481792') {
+        let items = Array('https://imgur.com/u5ENG7a', 'https://imgur.com/aAAlBgl', 'https://imgur.com/xKFblVP', 'https://imgur.com/NnL0hjD');
+        let loadedImage;
+        let caption = "";
+
+        args.forEach(word => {
+            caption = caption + word + " ";
+        });
+        let min = Math.ceil(0);
+        let max = Math.floor(3);
+        let index = Math.floor(Math.random() * (max - min)) + min;
+        let microsoft = Jimp.loadFont(Jimp.FONT_SANS_128_WHITE);
+        let techSupport = "Microsoft Tech Support says:";
+        Jimp.read(items[index])
+        .then(function (image) {
+            loadedImage = image;
+            return Jimp.loadFont(Jimp.FONT_SANS_128_WHITE);
+        })
+        .then(function (font) {
+            let xSize;
+            let ySize;
+            switch (index) {
+                case 0:
+                    xSize = 244;
+                    ySize = 394;
+                    break;
+                case 1: 
+                    xSize = 266;
+                    ySize = 342;
+                    break;
+                case 2:
+                    xSize = 327;
+                    ySize = 465;
+                    break;
+                case 3:
+                    xSize = 670;
+                    ySize = 505;
+                    break;
+            }
+            
+            loadedImage.print(font, (xSize / 2) - (caption.length * 35), (ySize / 2), caption);
+            loadedImage.print(microsoft, (xSize / 2), (ySize / 2 - 50), techSupport)
+            .write('pp_itchy.jpg');
+            msg.channel.send('', {
+                files: ["./pp_itchy.jpg"]
+            });
+        })
+        .catch(function (err) {
+            console.error(err);
+        });
+    }
+
     if (messageArray[0] === "?memeElian") {
         let loadedImage;
         let caption = "";
