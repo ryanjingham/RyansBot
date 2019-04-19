@@ -6,7 +6,8 @@
   "dependencies": {
     "discord.js": "^11.4.2",
     "fs": "^0.0.1-security",
-    "imgurwrap": "^0.0.4"
+    "imgurwrap": "^0.0.4",
+    "jimp": "^0.6.1"
   },
   "devDependencies": {},
   "scripts": {

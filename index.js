@@ -4,6 +4,7 @@ const Discord = require('discord.js');
 const bot = new Discord.Client({disableEveryone: true});
 const fs = require('fs');
 const config = require('./config.json');
+const Jimp = require('jimp');
 bot.commands = new Discord.Collection();
 
 var prefix = config.Prefix
@@ -50,6 +51,56 @@ bot.on('message', async msg => {
 
     if (msg.author.id === '252135691071389712') {
         msg.channel.send('snitch');
+    }
+
+    if (messageArray[0] === "?memeElian") {
+        let loadedImage;
+        let caption = "";
+        args.forEach(word => {
+            caption = caption + word + " ";
+        });
+
+        Jimp.read('elian.jpg')
+            .then(function (image) {
+            loadedImage = image;
+            console.log("image loaded");
+            return Jimp.loadFont(Jimp.FONT_SANS_128_WHITE);
+            })
+            .then(function (font) {
+                loadedImage.print(font, (1504 / 2) - (caption.length * 35), (2016 / 2 + 250), caption)
+                .write('elian1.jpg');
+                msg.channel.send('lmao gay', {
+                    files: ["./elian1.jpg"]
+                });
+            })
+            .catch(function (err) {
+                console.error(err);
+            });
+    }
+
+    if (messageArray[0] === "?memeBen") {
+        let loadedImage;
+        let caption = "";
+        args.forEach(word => {
+            caption = caption + word + " ";
+        });
+
+        Jimp.read('ben.png')
+            .then(function (image) {
+            loadedImage = image;
+            console.log("image loaded");
+            return Jimp.loadFont(Jimp.FONT_SANS_64_WHITE);
+            })
+            .then(function (font) {
+                loadedImage.print(font, (864 / 2) - (caption.length * 15), (1536 / 2 + 250), caption)
+                .write('ben1.jpg');
+                msg.channel.send('lmao gay', {
+                    files: ["./ben1.jpg"]
+                });
+            })
+            .catch(function (err) {
+                console.error(err);
+            });
     }
 
 });
